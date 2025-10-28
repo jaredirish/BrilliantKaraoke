@@ -2,11 +2,27 @@
 
 ## Overview
 
-This system provides real-time song recognition and synchronized lyric display for smart glasses using MentraOS. Users wearing smart glasses can see song information and synchronized lyrics for any music playing around them, creating an immersive karaoke experience.
+This system provides real-time song recognition and synchronized lyric display for smart glasses. Users wearing smart glasses can see song information and synchronized lyrics for any music playing around them, creating an immersive karaoke experience.
+
+**Two Implementations Available:**
+
+1. **Brilliant Labs Frame** (Python) - NEW! Port for Frame glasses using Python SDK
+   - Located in `/frame_karaoke/` directory
+   - Python 3.7+ desktop host application
+   - See [Frame-specific documentation](#frame-version-python) below
+
+2. **MentraOS** (TypeScript) - Original implementation
+   - Located in `/src/` directory
+   - TypeScript/Bun server application
+   - See [MentraOS documentation](#mentraos-version-typescript) below
 
 ## 🚀 Current Status
 
-**Working!** The system successfully recognizes songs and displays lyrics on smart glasses. See [PROJECT_STATUS.md](./PROJECT_STATUS.md) for detailed implementation status, known issues, and next steps.
+### Frame Version (Python)
+**In Development** - Currently porting the proven MentraOS architecture to Brilliant Labs Frame glasses using the Frame Python SDK. Core architecture and services implemented.
+
+### MentraOS Version (TypeScript)
+**Working!** The system successfully recognizes songs and displays lyrics on MentraOS smart glasses. See [PROJECT_STATUS.md](./PROJECT_STATUS.md) for detailed implementation status, known issues, and next steps.
 
 ## Core Features
 
@@ -349,7 +365,104 @@ interface KaraokeConfig {
 - Test suite with visual simulator
 - Intelligent LRC preprocessing
 
-## Quick Start
+---
+
+## Frame Version (Python)
+
+### Architecture Overview
+
+The Frame version is a Python host application that runs on your computer and communicates with Frame glasses via Bluetooth. It maintains the same proven manager pattern from the MentraOS version:
+
+```
+KaraokeApp (main application)
+├─ Frame SDK connection management (Bluetooth)
+├─ Audio capture loop (continuous recording)
+└─ Coordinates all managers
+
+Managers:
+├─ RecognitionManager - Audio buffering & ACRCloud recognition
+├─ LyricsManager - LRC fetching, parsing, chunking
+├─ PositionTracker - Song position tracking with drift correction
+├─ DisplayManager - Frame display formatting and updates
+└─ HistoryManager - Song history tracking
+```
+
+### Key Differences from MentraOS Version
+
+| Aspect | MentraOS (TypeScript) | Frame (Python) |
+|--------|----------------------|----------------|
+| **Runtime** | Bun/Node.js server | Python 3.7+ desktop app |
+| **Communication** | WebSocket server | Direct Bluetooth via SDK |
+| **Audio Streaming** | Continuous callback chunks | Polling with `record_audio()` |
+| **Multi-user** | Multiple sessions | Single user per app instance |
+| **Display** | Text-only, 5 lines | 640x400 pixels, text rendering |
+
+### Installation & Setup (Frame)
+
+1. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your ACRCloud credentials
+   ```
+
+   Required variables:
+   ```
+   ACRCLOUD_HOST=identify-us-west-2.acrcloud.com
+   ACRCLOUD_ACCESS_KEY=your_access_key
+   ACRCLOUD_ACCESS_SECRET=your_secret_key
+   ```
+
+3. **Run the Frame karaoke app:**
+   ```bash
+   python -m frame_karaoke.main
+   ```
+
+4. **The app will:**
+   - Connect to your Frame glasses via Bluetooth
+   - Start capturing audio from Frame's microphone
+   - Recognize songs and display lyrics in real-time
+   - Show song info and synchronized lyrics on Frame's display
+
+### Frame Features
+
+- **Continuous Audio Monitoring** - Captures audio in 2-second chunks
+- **Song Recognition** - Uses ACRCloud API for accurate song identification
+- **Synchronized Lyrics** - Fetches and displays LRC lyrics in real-time
+- **Position Tracking** - Tracks song position with automatic drift correction
+- **Smart Display** - Formats lyrics optimally for Frame's 640x400 display
+- **History Tracking** - Maintains log of all recognized songs
+
+### Development Status (Frame)
+
+- ✅ Architecture designed
+- ✅ Project structure created
+- ✅ ACRCloud service implemented
+- ✅ LRC service implemented
+- ✅ All utility modules implemented (audio, LRC parser, text chunker)
+- ✅ All managers implemented (Recognition, Lyrics, Position, Display, History)
+- ✅ Main app integration completed
+- ✅ Entry point with CLI created
+- 🧪 Ready for testing!
+
+**The Frame port is complete and ready to test!** All core functionality has been implemented:
+- Audio capture from Frame microphone
+- Song recognition via ACRCloud
+- Lyrics fetching and display
+- Position tracking with drift correction
+- Full display formatting for Frame's display
+
+See [FRAME_ARCHITECTURE.md](./FRAME_ARCHITECTURE.md) for detailed architecture documentation.
+
+---
+
+## MentraOS Version (TypeScript)
+
+### Quick Start (MentraOS)
 
 1. Set environment variables:
    ```bash
@@ -367,5 +480,7 @@ interface KaraokeConfig {
    ```bash
    bun run dev
    ```
+
+---
 
 This system creates a seamless real-time karaoke experience where users can see synchronized lyrics for any song playing around them, with intelligent fallbacks and continuous accuracy improvements.
