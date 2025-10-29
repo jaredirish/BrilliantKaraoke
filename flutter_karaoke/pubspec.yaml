@@ -1,0 +1,43 @@
+name: flutter_karaoke
+description: Real-time karaoke app for Brilliant Labs Frame glasses
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Frame SDK
+  frame_sdk: ^0.0.7
+
+  # HTTP and API
+  http: ^1.1.0
+  crypto: ^3.0.3
+
+  # Environment and config
+  flutter_dotenv: ^5.1.0
+
+  # Storage
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.1
+
+  # State management
+  provider: ^6.1.1
+
+  # UI
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Environment file
+  assets:
+    - .env

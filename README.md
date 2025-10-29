@@ -4,22 +4,31 @@
 
 This system provides real-time song recognition and synchronized lyric display for smart glasses. Users wearing smart glasses can see song information and synchronized lyrics for any music playing around them, creating an immersive karaoke experience.
 
-**Two Implementations Available:**
+**Three Implementations Available:**
 
-1. **Brilliant Labs Frame** (Python) - NEW! Port for Frame glasses using Python SDK
+1. **Brilliant Labs Frame** (Flutter/Dart) - **RECOMMENDED FOR MOBILE!** 🎉
+   - Located in `/flutter_karaoke/` directory
+   - Flutter mobile app for iOS/Android smartphones
+   - **This is the portable smartphone + glasses solution!**
+   - See [Frame Flutter documentation](#frame-version-flutter-mobile) below
+
+2. **Brilliant Labs Frame** (Python) - Desktop version
    - Located in `/frame_karaoke/` directory
    - Python 3.7+ desktop host application
-   - See [Frame-specific documentation](#frame-version-python) below
+   - See [Frame Python documentation](#frame-version-python-desktop) below
 
-2. **MentraOS** (TypeScript) - Original implementation
+3. **MentraOS** (TypeScript) - Original implementation
    - Located in `/src/` directory
    - TypeScript/Bun server application
    - See [MentraOS documentation](#mentraos-version-typescript) below
 
 ## 🚀 Current Status
 
-### Frame Version (Python)
-**In Development** - Currently porting the proven MentraOS architecture to Brilliant Labs Frame glasses using the Frame Python SDK. Core architecture and services implemented.
+### Frame Version (Flutter) - COMPLETE! ✅
+**Ready to use!** Complete Flutter mobile app (iOS/Android) for Frame glasses. All functionality implemented and ready for testing on smartphones.
+
+### Frame Version (Python) - COMPLETE! ✅
+**Ready to use!** Complete Python desktop app for Frame glasses. All functionality implemented and ready for testing on computers.
 
 ### MentraOS Version (TypeScript)
 **Working!** The system successfully recognizes songs and displays lyrics on MentraOS smart glasses. See [PROJECT_STATUS.md](./PROJECT_STATUS.md) for detailed implementation status, known issues, and next steps.
@@ -367,7 +376,93 @@ interface KaraokeConfig {
 
 ---
 
-## Frame Version (Python)
+## Frame Version (Flutter Mobile)
+
+### 📱 The Complete Mobile Solution!
+
+The Flutter version is a **mobile app for iOS and Android** that runs on your smartphone and communicates with Frame glasses via Bluetooth. Perfect for portable karaoke on the go!
+
+```
+Your Smartphone (iOS/Android)
+    ↓ Bluetooth
+Frame Glasses (display + microphone)
+```
+
+### Installation & Setup (Flutter)
+
+1. **Install Flutter** (if not already installed):
+   ```bash
+   # Follow instructions at https://flutter.dev/docs/get-started/install
+   ```
+
+2. **Navigate to Flutter project**:
+   ```bash
+   cd flutter_karaoke
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   flutter pub get
+   ```
+
+4. **Configure ACRCloud credentials**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your ACRCloud credentials
+   ```
+
+5. **Run on your device**:
+   ```bash
+   # For iOS
+   flutter run -d ios
+
+   # For Android
+   flutter run -d android
+   ```
+
+### How to Use
+
+1. **Launch the app** on your smartphone
+2. **Tap "Connect to Frame"** - app will scan and connect to your Frame glasses
+3. **Tap "Start Karaoke"** - app begins listening for music
+4. **Play any music** around you - lyrics appear on Frame!
+
+### Flutter Features
+
+- ✅ Native iOS and Android support
+- ✅ Bluetooth connection management
+- ✅ Real-time audio capture from Frame microphone
+- ✅ Song recognition via ACRCloud
+- ✅ Synchronized lyrics display on Frame
+- ✅ Position tracking with drift correction
+- ✅ Song history tracking
+- ✅ Simple, clean UI for controls
+
+### Architecture
+
+Same proven manager pattern as other versions:
+- **KaraokeApp**: Main coordinator with Frame SDK integration
+- **RecognitionManager**: Audio buffering & ACRCloud recognition
+- **LyricsManager**: LRC fetching, parsing, chunking
+- **PositionTracker**: Position tracking with drift correction
+- **DisplayManager**: Frame display formatting
+- **HistoryManager**: Song history tracking
+
+### Development Status (Flutter)
+
+- ✅ Complete Flutter project structure
+- ✅ All data models ported to Dart
+- ✅ ACRCloud service implemented
+- ✅ LRC service implemented
+- ✅ All utilities (audio, LRC parser, text chunker)
+- ✅ All managers implemented
+- ✅ Frame SDK integration
+- ✅ Mobile UI with controls
+- 🧪 Ready for testing!
+
+---
+
+## Frame Version (Python Desktop)
 
 ### Architecture Overview
 
