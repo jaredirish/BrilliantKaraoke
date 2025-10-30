@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:frame_sdk/frame_sdk.dart';
 import 'package:frame_sdk/display.dart';
+import 'package:record/record.dart';
 
 import 'models/app_models.dart';
 import 'services/acrcloud_service.dart';
@@ -12,12 +13,22 @@ import 'managers/position_tracker.dart';
 import 'managers/display_manager.dart';
 import 'managers/history_manager.dart';
 
+/// Audio source for the app
+enum AudioSource {
+  frame,      // Frame glasses microphone
+  phone,      // Phone's built-in microphone
+}
+
 /// Main karaoke application for Frame glasses
 class KaraokeApp {
-  final Frame frame;
+  final Frame? frame;  // Optional now for test mode
   final String acrcloudHost;
   final String acrcloudAccessKey;
   final String acrcloudSecretKey;
+  final AudioSource audioSource;
+
+  // Phone microphone recorder (for test mode)
+  final AudioRecorder _audioRecorder = AudioRecorder();
 
   // Services
   late final ACRCloudService _acrcloudService;
@@ -38,12 +49,18 @@ class KaraokeApp {
   // Timers
   Timer? _recognitionTimer;
   Timer? _displayTimer;
+  Timer? _phoneAudioTimer;
+
+  // Display callback for showing lyrics in app UI
+  Function(String)? onDisplayUpdate;
 
   KaraokeApp({
-    required this.frame,
+    this.frame,
     required this.acrcloudHost,
     required this.acrcloudAccessKey,
     required this.acrcloudSecretKey,
+    this.audioSource = AudioSource.frame,
+    this.onDisplayUpdate,
   }) {
     _initializeServices();
   }
@@ -77,6 +94,12 @@ class KaraokeApp {
     // Start recognition
     _recognitionManager.startListening();
 
+    // Start audio capture based on source
+    if (audioSource == AudioSource.phone) {
+      await _startPhoneAudioCapture();
+    }
+    // For Frame, audio will be added via addAudioChunk() calls
+
     // Start periodic recognition checks (every 1 second)
     _recognitionTimer = Timer.periodic(const Duration(seconds: 1), (_) async {
       if (_recognitionManager.shouldRecognize()) {
@@ -92,12 +115,72 @@ class KaraokeApp {
     });
   }
 
+  /// Start phone microphone audio capture
+  Future<void> _startPhoneAudioCapture() async {
+    try {
+      // Check and request permission
+      if (!await _audioRecorder.hasPermission()) {
+        print('Microphone permission denied');
+        return;
+      }
+
+      // Start recording in chunks
+      _phoneAudioTimer = Timer.periodic(const Duration(seconds: 2), (_) async {
+        try {
+          // Start recording to stream
+          final stream = await _audioRecorder.startStream(
+            const RecordConfig(
+              encoder: AudioEncoder.pcm16bits,
+              sampleRate: 16000,
+              numChannels: 1,
+            ),
+          );
+
+          // Collect 2 seconds of audio
+          final chunks = <Uint8List>[];
+          final subscription = stream.listen((data) {
+            chunks.add(Uint8List.fromList(data));
+          });
+
+          // Wait 2 seconds
+          await Future.delayed(const Duration(seconds: 2));
+
+          // Stop recording
+          await subscription.cancel();
+          await _audioRecorder.stop();
+
+          // Combine chunks and add to recognition buffer
+          if (chunks.isNotEmpty) {
+            final combined = Uint8List.fromList(
+              chunks.expand((chunk) => chunk).toList(),
+            );
+            addAudioChunk(combined);
+          }
+        } catch (e) {
+          print('Phone audio capture error: $e');
+        }
+      });
+    } catch (e) {
+      print('Failed to start phone audio: $e');
+    }
+  }
+
   /// Stop the karaoke app
   Future<void> stop() async {
     _isRunning = false;
     _recognitionManager.stopListening();
     _recognitionTimer?.cancel();
     _displayTimer?.cancel();
+    _phoneAudioTimer?.cancel();
+
+    // Stop phone audio recording
+    if (audioSource == AudioSource.phone) {
+      try {
+        await _audioRecorder.stop();
+      } catch (e) {
+        print('Error stopping audio recorder: $e');
+      }
+    }
   }
 
   /// Add audio chunk from Frame microphone
@@ -234,11 +317,18 @@ class KaraokeApp {
       currentPosition: position,
     );
 
-    // Send to Frame
-    try {
-      await frame.display.showText(displayText, align: Alignment.topLeft);
-    } catch (e) {
-      print('Display update error: $e');
+    // Send to Frame (if connected)
+    if (frame != null && audioSource == AudioSource.frame) {
+      try {
+        await frame!.display.showText(displayText, align: Alignment.topLeft);
+      } catch (e) {
+        print('Display update error: $e');
+      }
+    }
+
+    // Also send to app UI callback
+    if (onDisplayUpdate != null) {
+      onDisplayUpdate!(displayText);
     }
   }
 
@@ -258,4 +348,9 @@ class KaraokeApp {
 
   /// Check if currently running
   bool get isRunning => _isRunning;
+
+  /// Dispose resources
+  void dispose() {
+    _audioRecorder.dispose();
+  }
 }

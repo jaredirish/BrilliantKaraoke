@@ -27,6 +27,10 @@ dependencies:
   # State management
   provider: ^6.1.1
 
+  # Audio recording (for test mode with phone microphone)
+  record: ^5.0.4
+  permission_handler: ^11.0.1
+
   # UI
   cupertino_icons: ^1.0.6
 

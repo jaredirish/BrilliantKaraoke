@@ -422,21 +422,38 @@ Frame Glasses (display + microphone)
 
 ### How to Use
 
+**Two Modes Available:**
+
+#### 📱 Test Mode (Phone Microphone)
+Perfect for development and testing without Frame glasses!
+
 1. **Launch the app** on your smartphone
-2. **Tap "Connect to Frame"** - app will scan and connect to your Frame glasses
-3. **Tap "Start Karaoke"** - app begins listening for music
-4. **Play any music** around you - lyrics appear on Frame!
+2. **Select "Phone Microphone"** option
+3. **Tap "Start Test Mode"** - app begins listening with phone mic
+4. **Play music near your phone** - lyrics appear in the app!
+5. **No Frame glasses needed** - test anywhere!
+
+#### 🥽 Frame Mode (Frame Glasses)
+Full karaoke experience with Frame glasses:
+
+1. **Launch the app** on your smartphone
+2. **Select "Frame Glasses Microphone"** option
+3. **Tap "Connect to Frame"** - app connects via Bluetooth
+4. **Tap "Start Karaoke"** - app begins listening with Frame mic
+5. **Play any music** - lyrics appear on Frame & in app!
 
 ### Flutter Features
 
 - ✅ Native iOS and Android support
+- ✅ **Test Mode** - Use phone microphone without Frame (NEW!)
+- ✅ **Lyrics Preview** - See lyrics in app UI (NEW!)
 - ✅ Bluetooth connection management
-- ✅ Real-time audio capture from Frame microphone
+- ✅ Real-time audio capture (Frame or phone)
 - ✅ Song recognition via ACRCloud
 - ✅ Synchronized lyrics display on Frame
 - ✅ Position tracking with drift correction
 - ✅ Song history tracking
-- ✅ Simple, clean UI for controls
+- ✅ Simple, clean UI with audio source selection
 
 ### Architecture
 
