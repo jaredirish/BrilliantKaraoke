@@ -170,13 +170,9 @@ class _KaraokeScreenState extends State<KaraokeScreen> {
       }
 
       try {
-        final audioData = await _frame.microphone.recordAudio(
-          maxLengthInSeconds: 2,
-        );
+        final audioData = await _frame.microphone.recordAudio();
 
-        if (audioData != null) {
-          _karaokeApp!.addAudioChunk(audioData);
-        }
+        _karaokeApp!.addAudioChunk(audioData);
       } catch (e) {
         print('Frame audio capture error: $e');
       }

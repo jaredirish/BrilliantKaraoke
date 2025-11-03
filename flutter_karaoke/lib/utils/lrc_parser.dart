@@ -1,4 +1,3 @@
-import 'dart:math';
 import '../models/app_models.dart';
 
 const maxCharsPerLine = 45;

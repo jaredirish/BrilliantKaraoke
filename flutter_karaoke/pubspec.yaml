@@ -42,6 +42,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Environment file
-  assets:
-    - .env
+  # Environment file (create .env file with ACRCloud credentials)
+  # assets:
+  #   - .env

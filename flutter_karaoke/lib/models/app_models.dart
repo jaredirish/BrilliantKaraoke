@@ -15,7 +15,7 @@ class CurrentSong {
   final String? album;
   final double duration; // seconds
   final DateTime detectedAt;
-  final bool hasLyrics;
+  bool hasLyrics; // Mutable: updated when lyrics are fetched
   final double confidence; // 0.0 to 1.0
   List<LRCLine>? lrcData;
 

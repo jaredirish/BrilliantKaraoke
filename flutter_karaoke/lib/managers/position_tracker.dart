@@ -4,7 +4,6 @@ import '../models/app_models.dart';
 /// Song position tracking with drift correction
 class PositionTracker {
   DateTime? _songStartTime;
-  double _detectedOffset = 0.0;
   final List<RecognitionPoint> _recognitionHistory = [];
   double _estimatedDrift = 0.0;
 
@@ -27,7 +26,6 @@ class PositionTracker {
     _songStartTime = detectedAt.subtract(
       Duration(milliseconds: ((songOffset + apiLatencySeconds / 2) * 1000).round()),
     );
-    _detectedOffset = songOffset;
     _estimatedDrift = 0.0;
 
     _recognitionHistory.clear();
@@ -181,7 +179,6 @@ class PositionTracker {
   /// Reset position tracking
   void reset() {
     _songStartTime = null;
-    _detectedOffset = 0.0;
     _recognitionHistory.clear();
     _estimatedDrift = 0.0;
   }

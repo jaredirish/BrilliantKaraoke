@@ -1,7 +1,7 @@
 import '../models/app_models.dart';
 import '../services/lrc_service.dart';
 import '../utils/lrc_parser.dart';
-import '../utils/text_chunker.dart';
+import '../utils/text_chunker.dart' as text_chunker;
 
 /// Lyrics fetching and management
 class LyricsManager {
@@ -48,7 +48,7 @@ class LyricsManager {
       _cachedLRC[cacheKey] = lrcData;
 
       // Create chunks for display
-      currentChunks = chunkLyrics(lrcData);
+      currentChunks = text_chunker.chunkLyrics(lrcData);
 
       return lrcData;
     } catch (e) {
@@ -59,12 +59,12 @@ class LyricsManager {
 
   /// Get lyrics chunk for current position
   LyricsChunk? getCurrentChunk(double position) {
-    return getCurrentChunk(currentChunks, position);
+    return text_chunker.getCurrentChunk(currentChunks, position);
   }
 
   /// Get next lyrics chunk after current position
   LyricsChunk? getNextChunk(double position) {
-    return getNextChunk(currentChunks, position);
+    return text_chunker.getNextChunk(currentChunks, position);
   }
 
   /// Clear lyrics cache

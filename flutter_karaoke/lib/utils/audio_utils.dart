@@ -103,7 +103,7 @@ bool validateAudioData(Uint8List audioData) {
   }
 
   // Check if length is reasonable (at least 0.1 seconds at 16kHz)
-  const minBytes = (0.1 * 16000 * 2).floor(); // 0.1 seconds
+  const minBytes = 3200; // 0.1 seconds at 16kHz * 2 bytes per sample
   if (audioData.length < minBytes) {
     return false;
   }
