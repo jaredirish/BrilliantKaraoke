@@ -320,7 +320,7 @@ class KaraokeApp {
     // Send to Frame (if connected)
     if (frame != null && audioSource == AudioSource.frame) {
       try {
-        await frame!.display.showText(displayText, align: Alignment.TOP_LEFT);
+        await frame!.display.showText(displayText);
       } catch (e) {
         print('Display update error: $e');
       }
