@@ -1,0 +1,85 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - 'claude/**'
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Get Flutter dependencies
+        working-directory: ./flutter_karaoke
+        run: flutter pub get
+
+      - name: Analyze Flutter code
+        working-directory: ./flutter_karaoke
+        run: flutter analyze --no-fatal-infos
+
+      - name: Build Debug APK
+        working-directory: ./flutter_karaoke
+        run: flutter build apk --debug
+
+      - name: Build Release APK
+        working-directory: ./flutter_karaoke
+        run: flutter build apk --release
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: flutter_karaoke/build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 30
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: flutter_karaoke/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 90
+
+      - name: Create Release Summary
+        run: |
+          echo "## 📱 Flutter APK Build Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Build Information" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Flutter Version:** \`3.24.0\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- Debug APK: Available in workflow artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- Release APK: Available in workflow artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📱 Test Mode Features" >> $GITHUB_STEP_SUMMARY
+          echo "- Frame glasses microphone support" >> $GITHUB_STEP_SUMMARY
+          echo "- Phone microphone test mode (no Frame needed)" >> $GITHUB_STEP_SUMMARY
+          echo "- Real-time lyrics display" >> $GITHUB_STEP_SUMMARY
+          echo "- ACRCloud song recognition" >> $GITHUB_STEP_SUMMARY
