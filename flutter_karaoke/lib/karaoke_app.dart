@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:frame_sdk/frame_sdk.dart';
-import 'package:frame_sdk/display.dart';
 import 'package:record/record.dart';
 
 import 'models/app_models.dart';
