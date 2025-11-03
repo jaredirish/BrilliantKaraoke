@@ -54,7 +54,6 @@ class _KaraokeScreenState extends State<KaraokeScreen> {
   // Audio source selection
   // Frame mode temporarily disabled
   AudioSource _selectedAudioSource = AudioSource.phone;
-  static const bool _frameEnabled = false; // TODO: Set to true when Frame SDK is fixed
 
   @override
   void initState() {
@@ -70,12 +69,13 @@ class _KaraokeScreenState extends State<KaraokeScreen> {
   }
 
   Future<void> _requestInitialPermissions() async {
-    try {
-      // Request Bluetooth permissions
-      await BrilliantBluetooth.requestPermission();
-    } catch (e) {
-      print('Permission error: $e');
-    }
+    // TODO: Re-enable when Frame SDK is fixed
+    // try {
+    //   // Request Bluetooth permissions
+    //   await BrilliantBluetooth.requestPermission();
+    // } catch (e) {
+    //   print('Permission error: $e');
+    // }
   }
 
   Future<void> _requestMicrophonePermission() async {
@@ -86,32 +86,30 @@ class _KaraokeScreenState extends State<KaraokeScreen> {
   }
 
   Future<void> _connectToFrame() async {
-    setState(() {
-      _statusMessage = 'Connecting to Frame...';
-    });
+    // TODO: Re-enable when Frame SDK is fixed
+    _showError('Frame mode temporarily disabled');
+    return;
 
-    try {
-      final connected = await _frame.connect();
-
-      if (!connected) {
-        _showError('Failed to connect to Frame');
-        return;
-      }
-
-      setState(() {
-        _isConnected = true;
-        _statusMessage = 'Connected to Frame';
-      });
-
-      // Get battery level
-      _batteryLevel = await _frame.getBatteryLevel();
-
-      setState(() {
-        _statusMessage = 'Frame connected - ready to start';
-      });
-    } catch (e) {
-      _showError('Connection error: $e');
-    }
+    // setState(() {
+    //   _statusMessage = 'Connecting to Frame...';
+    // });
+    // try {
+    //   final connected = await _frame.connect();
+    //   if (!connected) {
+    //     _showError('Failed to connect to Frame');
+    //     return;
+    //   }
+    //   setState(() {
+    //     _isConnected = true;
+    //     _statusMessage = 'Connected to Frame';
+    //   });
+    //   _batteryLevel = await _frame.getBatteryLevel();
+    //   setState(() {
+    //     _statusMessage = 'Frame connected - ready to start';
+    //   });
+    // } catch (e) {
+    //   _showError('Connection error: $e');
+    // }
   }
 
   Future<void> _startKaraoke() async {
@@ -166,21 +164,20 @@ class _KaraokeScreenState extends State<KaraokeScreen> {
   }
 
   void _startFrameAudioCapture() {
-    // Record audio in 2-second chunks continuously from Frame
-    Timer.periodic(const Duration(seconds: 2), (timer) async {
-      if (!_isRunning || _karaokeApp == null) {
-        timer.cancel();
-        return;
-      }
-
-      try {
-        final audioData = await _frame.microphone.recordAudio();
-
-        _karaokeApp!.addAudioChunk(audioData);
-      } catch (e) {
-        print('Frame audio capture error: $e');
-      }
-    });
+    // TODO: Re-enable when Frame SDK is fixed
+    print('Frame audio capture disabled');
+    // Timer.periodic(const Duration(seconds: 2), (timer) async {
+    //   if (!_isRunning || _karaokeApp == null) {
+    //     timer.cancel();
+    //     return;
+    //   }
+    //   try {
+    //     final audioData = await _frame.microphone.recordAudio();
+    //     _karaokeApp!.addAudioChunk(audioData);
+    //   } catch (e) {
+    //     print('Frame audio capture error: $e');
+    //   }
+    // });
   }
 
   Future<void> _stopKaraoke() async {
