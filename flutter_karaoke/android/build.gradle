@@ -19,25 +19,17 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
-subprojects {
-    project.evaluationDependsOn(':app')
-}
 
-// Define compileSdkVersion for all subprojects
 subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty('android')) {
+    afterEvaluate {
+        if (it.hasProperty('android')) {
             android {
-                compileSdkVersion 34
-                buildToolsVersion "34.0.0"
-
-                defaultConfig {
-                    if (project.android.defaultConfig.minSdkVersion == null) {
-                        minSdkVersion 21
-                    }
+                if (compileSdkVersion == null) {
+                    compileSdkVersion 34
                 }
             }
         }
