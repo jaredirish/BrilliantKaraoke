@@ -24,12 +24,17 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 
-subprojects {
+subprojects { subproject ->
     afterEvaluate {
-        if (it.hasProperty('android')) {
-            android {
-                if (compileSdkVersion == null) {
-                    compileSdkVersion 33
+        if (subproject.pluginManager.hasPlugin('com.android.library') ||
+            subproject.pluginManager.hasPlugin('com.android.application')) {
+            subproject.android {
+                compileSdkVersion 33
+
+                if (subproject.android.hasProperty('defaultConfig')) {
+                    defaultConfig {
+                        minSdkVersion 21
+                    }
                 }
             }
         }
