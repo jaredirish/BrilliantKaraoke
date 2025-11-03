@@ -25,6 +25,7 @@ if (flutterVersionName == null) {
 android {
     namespace "com.example.flutter_karaoke"
     compileSdk 34
+    buildToolsVersion "34.0.0"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -41,8 +42,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.flutter_karaoke"
-        minSdkVersion 21
-        targetSdkVersion 34
+        minSdk 21
+        targetSdk 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -58,4 +59,6 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
