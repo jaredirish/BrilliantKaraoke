@@ -13,6 +13,9 @@ dependencies:
   # Frame SDK
   frame_sdk: ^0.0.7
 
+  # Override flutter_blue_plus to newer version
+  flutter_blue_plus: ^1.32.12
+
   # HTTP and API
   http: ^1.1.0
   crypto: ^3.0.3
