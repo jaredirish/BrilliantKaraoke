@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frame_sdk/frame_sdk.dart';
-import 'package:frame_sdk/bluetooth.dart';
+// TODO: Re-enable Frame SDK once Gradle compatibility is resolved
+// import 'package:frame_sdk/frame_sdk.dart';
+// import 'package:frame_sdk/bluetooth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 
@@ -40,7 +41,8 @@ class KaraokeScreen extends StatefulWidget {
 }
 
 class _KaraokeScreenState extends State<KaraokeScreen> {
-  final Frame _frame = Frame();
+  // TODO: Re-enable Frame when SDK is fixed
+  // final Frame _frame = Frame();
   KaraokeApp? _karaokeApp;
 
   bool _isConnected = false;
@@ -50,7 +52,9 @@ class _KaraokeScreenState extends State<KaraokeScreen> {
   String _lyricsDisplay = '';
 
   // Audio source selection
+  // Frame mode temporarily disabled
   AudioSource _selectedAudioSource = AudioSource.phone;
+  static const bool _frameEnabled = false; // TODO: Set to true when Frame SDK is fixed
 
   @override
   void initState() {
@@ -130,7 +134,7 @@ class _KaraokeScreenState extends State<KaraokeScreen> {
 
     try {
       _karaokeApp = KaraokeApp(
-        frame: _isConnected ? _frame : null,
+        // frame: _isConnected ? _frame : null, // TODO: Re-enable
         acrcloudHost: acrcloudHost,
         acrcloudAccessKey: acrcloudAccessKey,
         acrcloudSecretKey: acrcloudSecret,

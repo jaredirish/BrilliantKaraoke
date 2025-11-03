@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:frame_sdk/frame_sdk.dart';
+// TODO: Re-enable Frame SDK once Gradle compatibility is resolved
+// import 'package:frame_sdk/frame_sdk.dart';
 import 'package:record/record.dart';
 
 import 'models/app_models.dart';
@@ -20,7 +21,7 @@ enum AudioSource {
 
 /// Main karaoke application for Frame glasses
 class KaraokeApp {
-  final Frame? frame;  // Optional now for test mode
+  // final Frame? frame;  // Optional now for test mode - TODO: Re-enable
   final String acrcloudHost;
   final String acrcloudAccessKey;
   final String acrcloudSecretKey;
@@ -54,7 +55,7 @@ class KaraokeApp {
   Function(String)? onDisplayUpdate;
 
   KaraokeApp({
-    this.frame,
+    // this.frame, // TODO: Re-enable
     required this.acrcloudHost,
     required this.acrcloudAccessKey,
     required this.acrcloudSecretKey,
@@ -316,14 +317,14 @@ class KaraokeApp {
       currentPosition: position,
     );
 
-    // Send to Frame (if connected)
-    if (frame != null && audioSource == AudioSource.frame) {
-      try {
-        await frame!.display.showText(displayText);
-      } catch (e) {
-        print('Display update error: $e');
-      }
-    }
+    // Send to Frame (if connected) - TODO: Re-enable when Frame SDK is fixed
+    // if (frame != null && audioSource == AudioSource.frame) {
+    //   try {
+    //     await frame!.display.showText(displayText);
+    //   } catch (e) {
+    //     print('Display update error: $e');
+    //   }
+    // }
 
     // Also send to app UI callback
     if (onDisplayUpdate != null) {
