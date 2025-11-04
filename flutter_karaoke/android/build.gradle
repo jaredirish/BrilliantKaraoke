@@ -24,6 +24,24 @@ subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 
+// Configure all Android plugin subprojects
+subprojects {
+    project.plugins.withType(com.android.build.gradle.BasePlugin).configureEach {
+        project.extensions.configure(com.android.build.api.dsl.CommonExtension) {
+            compileSdk = 34
+
+            defaultConfig {
+                minSdk = 21
+            }
+
+            compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
