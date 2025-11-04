@@ -22,21 +22,18 @@ rootProject.buildDir = '../build'
 
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
 
-// Configure all Android plugin subprojects
-subprojects {
-    project.plugins.withType(com.android.build.gradle.BasePlugin).configureEach {
-        project.extensions.configure(com.android.build.api.dsl.CommonExtension) {
-            compileSdk = 34
+    afterEvaluate {
+        if (project.hasProperty("android")) {
+            def android = project.android
 
-            defaultConfig {
-                minSdk = 21
+            // Only configure if not already set
+            if (android.compileSdkVersion == null) {
+                android.compileSdkVersion 34
             }
 
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
+            if (android.defaultConfig.minSdkVersion == null) {
+                android.defaultConfig.minSdkVersion 21
             }
         }
     }
